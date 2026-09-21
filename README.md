@@ -1,3 +1,3 @@
-# Loansure-AI
+# Loan-Approval-Prediction
 
 [![Open in Bolt](https://bolt.new/static/open-in-bolt.svg)](https://bolt.new/~/sb1-7mryjkbm)
