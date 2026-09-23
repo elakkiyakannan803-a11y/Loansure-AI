@@ -21,7 +21,8 @@ export default function LoanCalculator() {
 
   const validate = () => {
     const e: Record<string, string> = {};
-    if (!amount || amount <= 0) e.amount = 'Please enter a valid loan amount.';
+    if (!amount || amount < 10000) e.amount = 'Minimum loan amount is ₹10,000.';
+    else if (amount > 5000000) e.amount = 'Maximum loan amount is ₹50,00,000.';
     if (rate < 0 || rate > 30) e.rate = 'Interest rate must be between 0 and 30%.';
     if (!tenure || tenure <= 0) e.tenure = 'Please enter a valid tenure.';
     setErrors(e);
@@ -62,9 +63,11 @@ export default function LoanCalculator() {
           </CardHeader>
           <CardBody>
             <form onSubmit={handleCalculate} className="space-y-5">
-              <Field label="Loan Amount (₹)" required error={errors.amount}>
+              <Field label="Loan Amount (₹) (₹10,000 – ₹50,00,000)" required error={errors.amount}>
                 <TextInput
                   type="number"
+                  min={10000}
+                  max={5000000}
                   value={amount || ''}
                   onChange={(e) => setAmount(parseInt(e.target.value) || 0)}
                   placeholder="500000"

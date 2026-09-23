@@ -48,7 +48,8 @@ export default function Eligibility() {
     if (!form.monthlyIncome || form.monthlyIncome <= 0) e.monthlyIncome = 'Please enter your monthly income.';
     if (form.existingEMI < 0) e.existingEMI = 'EMI cannot be negative.';
     if (!form.creditScore || form.creditScore < 300 || form.creditScore > 900) e.creditScore = 'Credit score must be between 300 and 900.';
-    if (!form.requestedAmount || form.requestedAmount <= 0) e.requestedAmount = 'Please enter a valid loan amount.';
+    if (!form.requestedAmount || form.requestedAmount < 10000) e.requestedAmount = 'Minimum loan amount is ₹10,000.';
+    else if (form.requestedAmount > 5000000) e.requestedAmount = 'Maximum loan amount is ₹50,00,000.';
     if (!form.tenure || form.tenure <= 0) e.tenure = 'Please enter a valid tenure.';
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -180,9 +181,11 @@ export default function Eligibility() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field label="Requested Loan Amount (₹)" required error={errors.requestedAmount}>
+                <Field label="Requested Loan Amount (₹) (₹10,000 – ₹50,00,000)" required error={errors.requestedAmount}>
                   <TextInput
                     type="number"
+                    min={10000}
+                    max={5000000}
                     value={form.requestedAmount || ''}
                     onChange={(e) => update('requestedAmount', parseInt(e.target.value) || 0)}
                     placeholder="500000"

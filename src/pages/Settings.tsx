@@ -39,7 +39,14 @@ export default function Settings() {
     navigate('/login');
   };
 
-  const settingsSections = [
+  type SettingsItem = {
+    label: string;
+    action?: () => void;
+    toggle?: boolean;
+    onToggle?: () => void;
+  };
+
+  const settingsSections: { title: string; icon: typeof User; items: SettingsItem[] }[] = [
     {
       title: 'Profile Settings',
       icon: User,
