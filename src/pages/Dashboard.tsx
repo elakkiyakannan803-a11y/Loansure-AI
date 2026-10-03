@@ -22,14 +22,6 @@ import { demoApplications, demoSchemes, demoBanks } from '@/data/demoData';
 
 const summaryCards = [
   {
-    label: 'Estimated Loan Eligibility',
-    value: formatINR(850000),
-    icon: Wallet,
-    color: 'from-accent-500/20 to-accent-700/10',
-    iconColor: 'text-accent-400',
-    route: '/eligibility',
-  },
-  {
     label: 'Eligible Loan Schemes',
     value: '6 Schemes',
     icon: Landmark,
@@ -93,7 +85,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Summary cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {summaryCards.map((card) => {
           const Icon = card.icon;
           return (
