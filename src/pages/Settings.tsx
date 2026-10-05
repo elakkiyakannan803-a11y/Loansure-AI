@@ -33,8 +33,8 @@ export default function Settings() {
   analytics: true,
   });
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     showToast('You have been logged out.', 'info');
     navigate('/login');
   };

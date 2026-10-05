@@ -13,6 +13,7 @@ export interface User {
 export interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
+  isEmailVerified: boolean;
 }
 
 export interface EligibilityResult {
@@ -52,7 +53,19 @@ export interface LoanScheme {
   interestRate: string;
   requiredDocuments: string[];
   eligibilityCriteria: string[];
+  subOptions?: string[];
 }
+
+export type ApplicationStatus =
+  | 'Draft'
+  | 'Submitted'
+  | 'Received by Lender'
+  | 'Under Review'
+  | 'Additional Documents Required'
+  | 'Approved'
+  | 'Rejected'
+  | 'Disbursal Pending'
+  | 'Completed';
 
 export interface LoanApplication {
   id: string;
@@ -60,9 +73,26 @@ export interface LoanApplication {
   lender: string;
   requestedAmount: number;
   applicationDate: string;
-  status: 'Draft' | 'Submitted' | 'Under Review' | 'Documents Required' | 'Approved' | 'Rejected';
+  status: ApplicationStatus;
   tenure: number;
   interestRate: number;
+  subType?: string;
+  purpose?: string;
+  lenderReference?: string;
+}
+
+export type DocumentStatus = 'Uploaded' | 'Processing' | 'Needs Review' | 'Verified' | 'Rejected';
+
+export interface ApplicationDocument {
+  id: string;
+  applicationId: string;
+  documentType: string;
+  fileName: string;
+  fileSize: number;
+  mimeType: string;
+  status: DocumentStatus;
+  reviewNotes?: string;
+  createdAt: string;
 }
 
 export interface DocumentItem {
@@ -72,6 +102,13 @@ export interface DocumentItem {
   required: boolean;
   uploaded: boolean;
   uploadDate?: string;
+}
+
+export interface ApplicationStatusHistory {
+  id: string;
+  status: ApplicationStatus;
+  note?: string;
+  createdAt: string;
 }
 
 export interface NotificationItem {
@@ -88,4 +125,21 @@ export interface ChatMessage {
   sender: 'user' | 'ai';
   text: string;
   time: string;
+}
+
+export interface Lender {
+  id: string;
+  name: string;
+  branchName: string;
+  category: string;
+  address: string;
+  city: string;
+  loanTypes: string[];
+  interestRateMin: number;
+  interestRateMax: number;
+  eligibilitySummary: string;
+  openingHours: string;
+  phone: string;
+  apiEndpoint?: string | null;
+  website: string;
 }

@@ -4,6 +4,7 @@ import type {
   LoanApplication,
   DocumentItem,
   NotificationItem,
+  ApplicationStatus,
 } from '@/types';
 
 export const demoBanks: BankBranch[] = [
@@ -262,6 +263,19 @@ export const demoSchemes: LoanScheme[] = [
     requiredDocuments: ['Identity proof', 'Address proof', 'Income proof', 'Bank statements (6 mo)'],
     eligibilityCriteria: ['Age 21–55', 'Monthly income ≥ ₹20,000', 'CIBIL 700+', 'Employment 1+ year'],
   },
+  {
+    id: 's7',
+    name: 'Arogya Health Loan',
+    category: 'Health',
+    purpose: 'Financial assistance for medical treatment, surgery, and healthcare expenses',
+    eligibleUsers: 'Individuals facing medical expenses at recognized hospitals',
+    loanRangeMin: 50000,
+    loanRangeMax: 5000000,
+    interestRate: '11.0% – 20.0% p.a.',
+    requiredDocuments: ['Identity Proof', 'Address Proof', 'Hospital Estimate/Bill', 'Income Proof', 'Bank Statement (6 months)'],
+    eligibilityCriteria: ['Medical treatment requirement', 'Age 18–75', 'Hospital estimate from recognized facility', 'Co-applicant for amounts above ₹10 lakhs'],
+    subOptions: ['Medical treatment', 'Surgery', 'Hospital expenses', 'Emergency medical expenses', 'Other healthcare expenses'],
+  },
 ];
 
 export const demoApplications: LoanApplication[] = [
@@ -281,7 +295,7 @@ export const demoApplications: LoanApplication[] = [
     lender: 'HDFC Bank',
     requestedAmount: 500000,
     applicationDate: '2024-09-02',
-    status: 'Documents Required',
+    status: 'Additional Documents Required',
     tenure: 60,
     interestRate: 11.5,
   },
@@ -317,6 +331,26 @@ export const demoApplications: LoanApplication[] = [
   },
 ];
 
+export const applicationStatuses: ApplicationStatus[] = [
+  'Draft',
+  'Submitted',
+  'Received by Lender',
+  'Under Review',
+  'Additional Documents Required',
+  'Approved',
+  'Rejected',
+  'Disbursal Pending',
+  'Completed',
+];
+
+export const healthLoanSubOptions = [
+  'Medical treatment',
+  'Surgery',
+  'Hospital expenses',
+  'Emergency medical expenses',
+  'Other healthcare expenses',
+];
+
 export const demoDocuments: DocumentItem[] = [
   { id: 'd1', name: 'Aadhaar Card', category: 'Identity Proof', required: true, uploaded: true, uploadDate: '2024-08-10' },
   { id: 'd2', name: 'PAN Card', category: 'Identity Proof', required: true, uploaded: true, uploadDate: '2024-08-10' },
@@ -347,6 +381,8 @@ export const loanCategories = [
   'Business Loan',
   'Home Loan',
   'Vehicle Loan',
+  'Agriculture Loan',
+  'Health Loan',
   'Other',
 ];
 
@@ -354,8 +390,10 @@ export const loanPurposes = [
   'Education',
   'Business',
   'Medical',
+  'Health',
   'Home',
   'Vehicle',
+  'Agriculture',
   'Personal',
   'Other',
 ];

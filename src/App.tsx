@@ -6,6 +6,7 @@ import Layout from '@/components/layout/Layout';
 import Login from '@/pages/auth/Login';
 import SignUp from '@/pages/auth/SignUp';
 import ForgotPassword from '@/pages/auth/ForgotPassword';
+import VerifyEmail from '@/pages/auth/VerifyEmail';
 import Dashboard from '@/pages/Dashboard';
 import Eligibility from '@/pages/Eligibility';
 import Calculator from '@/pages/Calculator';
@@ -19,14 +20,34 @@ import Settings from '@/pages/Settings';
 import type { ReactNode } from 'react';
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isEmailVerified, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-navy-900 flex items-center justify-center">
+        <div className="h-8 w-8 border-2 border-accent-400 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!isEmailVerified) return <Navigate to="/verify-email" replace />;
+
   return <>{children}</>;
 }
 
 function PublicRoute({ children }: { children: ReactNode }) {
-  const { isAuthenticated } = useAuth();
-  if (isAuthenticated) return <Navigate to="/dashboard" replace />;
+  const { isAuthenticated, isEmailVerified, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-navy-900 flex items-center justify-center">
+        <div className="h-8 w-8 border-2 border-accent-400 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (isAuthenticated && isEmailVerified) return <Navigate to="/dashboard" replace />;
   return <>{children}</>;
 }
 
@@ -40,6 +61,7 @@ export default function App() {
               <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
               <Route path="/signup" element={<PublicRoute><SignUp /></PublicRoute>} />
               <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
               <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/eligibility" element={<Eligibility />} />

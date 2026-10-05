@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User, Mail, Phone, MapPin, Briefcase, Wallet, CreditCard, Save, Pencil, X } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Briefcase, Wallet, CreditCard, Pencil, X } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardBody } from '@/components/ui/Card';
 import { Field, TextInput, SelectInput } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -21,12 +21,16 @@ export default function Profile() {
     loanPreference: user?.loanPreference || 'Personal Loan',
   });
 
-  const handleSave = () => {
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
     if (!form.name) {
       showToast('Please enter your name.', 'error');
       return;
     }
-    updateUser(form);
+    setSaving(true);
+    await updateUser(form);
+    setSaving(false);
     setEditing(false);
     showToast('Profile updated successfully.', 'success');
   };
@@ -102,8 +106,8 @@ export default function Profile() {
                 <Button size="sm" variant="ghost" onClick={handleCancel}>
                   <X className="h-3.5 w-3.5" /> Cancel
                 </Button>
-                <Button size="sm" onClick={handleSave}>
-                  <Save className="h-3.5 w-3.5" /> Save Changes
+                <Button size="sm" onClick={handleSave} disabled={saving}>
+                  {saving ? 'Saving...' : 'Save Changes'}
                 </Button>
               </div>
             )}

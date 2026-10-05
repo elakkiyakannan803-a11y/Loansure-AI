@@ -13,27 +13,30 @@ export default function ForgotPassword() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (ev: React.FormEvent) => {
+  const handleSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
     if (!email) {
       setError('Please enter your email.');
       return;
     }
-    if (!/\S+@\S+\.\S+/.test(email)) {
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
       setError('Please enter a valid email address.');
       return;
     }
     setError('');
     setLoading(true);
-    setTimeout(() => {
-      const result = resetPassword(email);
+    try {
+      const result = await resetPassword(email);
       setLoading(false);
       if (result.success) {
         setSent(true);
       } else {
         setError(result.error || 'Unable to reset password.');
       }
-    }, 600);
+    } catch {
+      setLoading(false);
+      setError('An unexpected error occurred. Please try again.');
+    }
   };
 
   return (
@@ -76,6 +79,7 @@ export default function ForgotPassword() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@example.com"
+                      autoComplete="email"
                       className={`w-full rounded-lg bg-navy-800/60 border ${error ? 'border-orange-500' : 'border-navy-500/40'} pl-10 pr-3.5 py-2.5 text-sm text-white placeholder:text-navy-300/60 focus:outline-none focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30`}
                     />
                   </div>

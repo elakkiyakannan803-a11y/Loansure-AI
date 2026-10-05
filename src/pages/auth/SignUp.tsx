@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, User, Eye, EyeOff, UserPlus } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, UserPlus, Check } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { useToast } from '@/lib/toast';
 import Logo from '@/components/ui/Logo';
@@ -19,33 +19,43 @@ export default function SignUp() {
   const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string; confirm?: string; agree?: string }>({});
   const [loading, setLoading] = useState(false);
 
+  const passwordChecks = [
+    { label: 'At least 8 characters', met: password.length >= 8 },
+    { label: 'Contains uppercase letter', met: /[A-Z]/.test(password) },
+    { label: 'Contains a number', met: /\d/.test(password) },
+  ];
+
   const validate = () => {
     const e: typeof errors = {};
     if (!name) e.name = 'Please enter your full name.';
+    else if (name.trim().length < 2) e.name = 'Name must be at least 2 characters.';
     if (!email) e.email = 'Please enter your email.';
-    else if (!/\S+@\S+\.\S+/.test(email)) e.email = 'Please enter a valid email address.';
+    else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) e.email = 'Please enter a valid email address.';
     if (!password) e.password = 'Please enter a password.';
-    else if (password.length < 6) e.password = 'Password must be at least 6 characters.';
+    else if (password.length < 8) e.password = 'Password must be at least 8 characters.';
     if (password !== confirm) e.confirm = 'Passwords do not match.';
     if (!agree) e.agree = 'Please accept the terms to continue.';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = (ev: React.FormEvent) => {
+  const handleSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
     if (!validate()) return;
     setLoading(true);
-    setTimeout(() => {
-      const result = signup(name, email, password);
+    try {
+      const result = await signup(name, email, password);
       if (result.success) {
-        showToast('Account created successfully! Welcome to LoanSure AI.', 'success');
-        navigate('/dashboard');
+        showToast('Account created! Verification email sent.', 'success');
+        navigate(`/verify-email?email=${encodeURIComponent(email)}`);
       } else {
         showToast(result.error || 'Sign up failed.', 'error');
       }
+    } catch {
+      showToast('An unexpected error occurred. Please try again.', 'error');
+    } finally {
       setLoading(false);
-    }, 600);
+    }
   };
 
   return (
@@ -74,6 +84,7 @@ export default function SignUp() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="John Doe"
+                  autoComplete="name"
                   className={`w-full rounded-lg bg-navy-800/60 border ${errors.name ? 'border-orange-500' : 'border-navy-500/40'} pl-10 pr-3.5 py-2.5 text-sm text-white placeholder:text-navy-300/60 focus:outline-none focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30`}
                 />
               </div>
@@ -89,6 +100,7 @@ export default function SignUp() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
+                  autoComplete="email"
                   className={`w-full rounded-lg bg-navy-800/60 border ${errors.email ? 'border-orange-500' : 'border-navy-500/40'} pl-10 pr-3.5 py-2.5 text-sm text-white placeholder:text-navy-300/60 focus:outline-none focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30`}
                 />
               </div>
@@ -103,7 +115,8 @@ export default function SignUp() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Min 6 characters"
+                  placeholder="Min 8 characters"
+                  autoComplete="new-password"
                   className={`w-full rounded-lg bg-navy-800/60 border ${errors.password ? 'border-orange-500' : 'border-navy-500/40'} pl-10 pr-10 py-2.5 text-sm text-white placeholder:text-navy-300/60 focus:outline-none focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30`}
                 />
                 <button
@@ -115,6 +128,16 @@ export default function SignUp() {
                 </button>
               </div>
               {errors.password && <p className="mt-1 text-xs text-orange-400">{errors.password}</p>}
+              {password.length > 0 && (
+                <div className="mt-2 space-y-1">
+                  {passwordChecks.map((check) => (
+                    <div key={check.label} className="flex items-center gap-1.5 text-xs">
+                      <Check className={`h-3 w-3 ${check.met ? 'text-green-400' : 'text-navy-500'}`} />
+                      <span className={check.met ? 'text-green-400' : 'text-navy-400'}>{check.label}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div>
@@ -126,6 +149,7 @@ export default function SignUp() {
                   value={confirm}
                   onChange={(e) => setConfirm(e.target.value)}
                   placeholder="Re-enter password"
+                  autoComplete="new-password"
                   className={`w-full rounded-lg bg-navy-800/60 border ${errors.confirm ? 'border-orange-500' : 'border-navy-500/40'} pl-10 pr-3.5 py-2.5 text-sm text-white placeholder:text-navy-300/60 focus:outline-none focus:border-accent-400 focus:ring-1 focus:ring-accent-400/30`}
                 />
               </div>
