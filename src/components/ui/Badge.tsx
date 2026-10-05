@@ -21,13 +21,21 @@ export function StatusBadge({ status }: { status: string }) {
     'Approved': 'success',
     'Eligible': 'success',
     'Potentially Eligible': 'success',
+    'Completed': 'success',
     'Submitted': 'info',
     'Under Review': 'info',
+    'Received by Lender': 'info',
+    'Disbursal Pending': 'info',
     'Documents Required': 'warning',
+    'Additional Documents Required': 'warning',
     'Draft': 'neutral',
     'Review Required': 'warning',
+    'Needs Review': 'warning',
     'Rejected': 'error',
     'Not Eligible': 'error',
+    'Uploaded': 'info',
+    'Processing': 'info',
+    'Verified': 'success',
   };
   const variant = map[status] || 'neutral';
   return <Badge variant={variant}>{status}</Badge>;

@@ -23,7 +23,7 @@ import { demoApplications, demoSchemes, demoBanks } from '@/data/demoData';
 const summaryCards = [
   {
     label: 'Eligible Loan Schemes',
-    value: '6 Schemes',
+    value: '7 Schemes',
     icon: Landmark,
     color: 'from-green-500/20 to-green-700/10',
     iconColor: 'text-green-400',
@@ -36,14 +36,6 @@ const summaryCards = [
     color: 'from-blue-500/20 to-blue-700/10',
     iconColor: 'text-blue-400',
     route: '/banks',
-  },
-  {
-    label: 'Application Status',
-    value: '2 Active',
-    icon: FileText,
-    color: 'from-orange-500/20 to-orange-700/10',
-    iconColor: 'text-orange-400',
-    route: '/applications',
   },
 ];
 
@@ -85,7 +77,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Summary cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {summaryCards.map((card) => {
           const Icon = card.icon;
           return (
@@ -108,8 +100,20 @@ export default function Dashboard() {
       </div>
 
       {/* Quick actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="hover:border-accent-400/40 transition-colors cursor-pointer" >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="hover:border-accent-400/40 transition-colors cursor-pointer">
+          <CardBody className="flex items-center gap-4 pt-5">
+            <div className="p-3 rounded-lg bg-accent-500/15 text-accent-400">
+              <FileText className="h-6 w-6" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-white">Apply for Loan</h3>
+              <p className="text-xs text-navy-300">Start a new application</p>
+            </div>
+            <Button size="sm" onClick={() => navigate('/apply')}>Go</Button>
+          </CardBody>
+        </Card>
+        <Card className="hover:border-accent-400/40 transition-colors cursor-pointer">
           <CardBody className="flex items-center gap-4 pt-5">
             <div className="p-3 rounded-lg bg-accent-500/15 text-accent-400">
               <Calculator className="h-6 w-6" />

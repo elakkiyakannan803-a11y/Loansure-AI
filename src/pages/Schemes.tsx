@@ -1,10 +1,11 @@
-import { useState, useMemo } from 'react';
-import { Landmark, GraduationCap, Briefcase, Wheat, Home, Car, User, ChevronDown, ChevronUp, FileText, CheckCircle2, Info } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Landmark, GraduationCap, Briefcase, Wheat, Home, Car, User, Heart, ChevronDown, ChevronUp, FileText, CheckCircle2, Info, ArrowRight } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardBody } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { formatINR } from '@/lib/eligibility';
-import { demoSchemes } from '@/data/demoData';
+import { fetchSchemes } from '@/lib/loanApplication';
 import type { LoanScheme } from '@/types';
 
 const categoryIcons: Record<string, typeof GraduationCap> = {
@@ -14,18 +15,29 @@ const categoryIcons: Record<string, typeof GraduationCap> = {
   Housing: Home,
   Vehicle: Car,
   Personal: User,
+  Health: Heart,
 };
 
-const categories = ['All', 'Education', 'Business', 'Agriculture', 'Housing', 'Vehicle', 'Personal'];
+const categories = ['All', 'Education', 'Business', 'Agriculture', 'Housing', 'Vehicle', 'Personal', 'Health'];
 
 export default function Schemes() {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('All');
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [schemes, setSchemes] = useState<LoanScheme[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchSchemes().then((data) => {
+      setSchemes(data);
+      setLoading(false);
+    });
+  }, []);
 
   const filteredSchemes = useMemo(() => {
-    if (activeCategory === 'All') return demoSchemes;
-    return demoSchemes.filter((s) => s.category === activeCategory);
-  }, [activeCategory]);
+    if (activeCategory === 'All') return schemes;
+    return schemes.filter((s) => s.category === activeCategory);
+  }, [activeCategory, schemes]);
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -60,21 +72,28 @@ export default function Schemes() {
       </div>
 
       {/* Scheme cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {filteredSchemes.map((scheme) => (
-          <SchemeCard
-            key={scheme.id}
-            scheme={scheme}
-            expanded={expandedId === scheme.id}
-            onToggle={() => setExpandedId(expandedId === scheme.id ? null : scheme.id)}
-          />
-        ))}
-      </div>
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <div className="h-8 w-8 border-2 border-accent-400 border-t-transparent rounded-full animate-spin" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {filteredSchemes.map((scheme) => (
+            <SchemeCard
+              key={scheme.id}
+              scheme={scheme}
+              expanded={expandedId === scheme.id}
+              onToggle={() => setExpandedId(expandedId === scheme.id ? null : scheme.id)}
+              onApply={() => navigate(`/apply?scheme=${scheme.id}`)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
-function SchemeCard({ scheme, expanded, onToggle }: { scheme: LoanScheme; expanded: boolean; onToggle: () => void }) {
+function SchemeCard({ scheme, expanded, onToggle, onApply }: { scheme: LoanScheme; expanded: boolean; onToggle: () => void; onApply: () => void }) {
   const Icon = categoryIcons[scheme.category] || Landmark;
 
   return (
@@ -140,16 +159,21 @@ function SchemeCard({ scheme, expanded, onToggle }: { scheme: LoanScheme; expand
           </div>
         )}
 
-        <button
-          onClick={onToggle}
-          className="flex items-center gap-1 text-xs text-accent-400 hover:text-accent-300 font-medium"
-        >
-          {expanded ? (
-            <><ChevronUp className="h-3.5 w-3.5" /> View Less</>
-          ) : (
-            <><ChevronDown className="h-3.5 w-3.5" /> View Details</>
-          )}
-        </button>
+        <div className="flex items-center justify-between pt-2 border-t border-navy-600/30">
+          <button
+            onClick={onToggle}
+            className="flex items-center gap-1 text-xs text-accent-400 hover:text-accent-300 font-medium"
+          >
+            {expanded ? (
+              <><ChevronUp className="h-3.5 w-3.5" /> View Less</>
+            ) : (
+              <><ChevronDown className="h-3.5 w-3.5" /> View Details</>
+            )}
+          </button>
+          <Button size="sm" onClick={onApply}>
+            Apply Now <ArrowRight className="h-3.5 w-3.5" />
+          </Button>
+        </div>
       </CardBody>
     </Card>
   );
