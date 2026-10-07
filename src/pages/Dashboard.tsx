@@ -100,19 +100,7 @@ export default function Dashboard() {
       </div>
 
       {/* Quick actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="hover:border-accent-400/40 transition-colors cursor-pointer">
-          <CardBody className="flex items-center gap-4 pt-5">
-            <div className="p-3 rounded-lg bg-accent-500/15 text-accent-400">
-              <FileText className="h-6 w-6" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-sm font-semibold text-white">Apply for Loan</h3>
-              <p className="text-xs text-navy-300">Start a new application</p>
-            </div>
-            <Button size="sm" onClick={() => navigate('/apply')}>Go</Button>
-          </CardBody>
-        </Card>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card className="hover:border-accent-400/40 transition-colors cursor-pointer">
           <CardBody className="flex items-center gap-4 pt-5">
             <div className="p-3 rounded-lg bg-accent-500/15 text-accent-400">

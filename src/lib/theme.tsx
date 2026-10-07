@@ -10,21 +10,18 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('dark');
-
-  useEffect(() => {
+  const [theme, setTheme] = useState<Theme>(() => {
     const stored = localStorage.getItem('loansure_theme') as Theme | null;
-    if (stored) {
-      setTheme(stored);
-    }
-  }, []);
+    return stored || 'dark';
+  });
 
   useEffect(() => {
     localStorage.setItem('loansure_theme', theme);
+    const root = document.documentElement;
     if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
+      root.classList.add('dark');
     } else {
-      document.documentElement.classList.remove('dark');
+      root.classList.remove('dark');
     }
   }, [theme]);
 
