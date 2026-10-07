@@ -14,6 +14,7 @@ import Banks from '@/pages/Banks';
 import Schemes from '@/pages/Schemes';
 import Assistant from '@/pages/Assistant';
 import Applications from '@/pages/Applications';
+import ApplyLoan from '@/pages/ApplyLoan';
 import Documents from '@/pages/Documents';
 import Profile from '@/pages/Profile';
 import Settings from '@/pages/Settings';
@@ -70,6 +71,7 @@ export default function App() {
                 <Route path="/schemes" element={<Schemes />} />
                 <Route path="/assistant" element={<Assistant />} />
                 <Route path="/applications" element={<Applications />} />
+                <Route path="/apply" element={<ApplyLoan />} />
                 <Route path="/documents" element={<Documents />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/settings" element={<Settings />} />
