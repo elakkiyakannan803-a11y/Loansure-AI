@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { MailCheck, Mail, ArrowLeft, RotateCw, CheckCircle, AlertTriangle } from 'lucide-react';
+import { MailCheck, Mail, ArrowLeft, RotateCw, CheckCircle, AlertTriangle, Headset } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { useToast } from '@/lib/toast';
 import Logo from '@/components/ui/Logo';
 import { Button } from '@/components/ui/Button';
 
 const RESEND_COOLDOWN_SECONDS = 60;
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export default function VerifyEmail() {
   const { resendVerification } = useAuth();
@@ -42,6 +43,14 @@ export default function VerifyEmail() {
       setSending(false);
     }
   }, [cooldown, sending, email, resendVerification, showToast]);
+
+  const handleContactSupport = useCallback(() => {
+    if (!email || !EMAIL_REGEX.test(email)) {
+      showToast('Please enter a valid email address first.', 'error');
+      return;
+    }
+    window.location.href = `mailto:${email}`;
+  }, [email, showToast]);
 
   return (
     <div className="min-h-screen bg-navy-900 flex items-center justify-center p-4 relative overflow-hidden">
@@ -115,6 +124,18 @@ export default function VerifyEmail() {
                       Resend Verification Email
                     </span>
                   )}
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  onClick={handleContactSupport}
+                  disabled={!email}
+                  className="w-full"
+                >
+                  <span className="flex items-center gap-2">
+                    <Headset className="h-4 w-4" />
+                    Contact Support
+                  </span>
                 </Button>
 
                 <Link to="/login" className="flex items-center justify-center gap-1.5 text-sm text-accent-400 hover:text-accent-300">
