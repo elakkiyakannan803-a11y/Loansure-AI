@@ -111,38 +111,39 @@
   border-color: #0a0f1c !important;
 }
 
-/* Dark mode input readability: high-contrast text, visible cursor, readable placeholder */
+/* Dark mode input readability: black text on light input backgrounds, visible cursor */
 .dark input,
 .dark textarea,
 .dark select {
-  color: #ffffff !important;
-  caret-color: #22d3ee !important;
-  -webkit-text-fill-color: #ffffff !important;
+  color: #000000 !important;
+  background-color: #f1f5f9 !important;
+  caret-color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
 }
 .dark input::placeholder,
 .dark textarea::placeholder {
-  color: #94a3b8 !important;
+  color: #64748b !important;
   opacity: 1 !important;
-  -webkit-text-fill-color: #94a3b8 !important;
+  -webkit-text-fill-color: #64748b !important;
 }
 .dark input:focus,
 .dark textarea:focus,
 .dark select:focus {
-  caret-color: #22d3ee !important;
+  caret-color: #000000 !important;
 }
 /* Prevent browser autofill from overriding dark-mode colors */
 .dark input:-webkit-autofill,
 .dark textarea:-webkit-autofill,
 .dark select:-webkit-autofill {
-  -webkit-text-fill-color: #ffffff !important;
-  -webkit-box-shadow: 0 0 0 1000px #0f1729 inset !important;
-  caret-color: #22d3ee !important;
+  -webkit-text-fill-color: #000000 !important;
+  -webkit-box-shadow: 0 0 0 1000px #f1f5f9 inset !important;
+  caret-color: #000000 !important;
   transition: background-color 9999s ease-in-out 0s;
 }
 /* Ensure option dropdown text is readable in dark mode */
 .dark select option {
-  background-color: #0f1729 !important;
-  color: #ffffff !important;
+  background-color: #f1f5f9 !important;
+  color: #000000 !important;
 }
 
 @layer utilities {
