@@ -7,7 +7,6 @@ import Logo from '@/components/ui/Logo';
 import { Button } from '@/components/ui/Button';
 
 const RESEND_COOLDOWN_SECONDS = 60;
-const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export default function VerifyEmail() {
   const { resendVerification } = useAuth();
@@ -45,8 +44,8 @@ export default function VerifyEmail() {
   }, [cooldown, sending, email, resendVerification, showToast]);
 
   const handleContactSupport = useCallback(() => {
-    if (!email || !EMAIL_REGEX.test(email)) {
-      showToast('Please enter a valid email address first.', 'error');
+    if (!email) {
+      showToast('Please enter an email address first.', 'error');
       return;
     }
     window.location.href = `mailto:${email}`;
